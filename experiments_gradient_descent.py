@@ -21,6 +21,7 @@ _, gda, _, _ = gradient_descent_adaptive_step(x0,f,g,step_size=0.09,niter=1000,t
 _, rms, _ = rmsprop(x0,f,g,niter=1000,tol=1e-6,eta=0.9,gamma=0.9)
 _, ada, _ = adam(x0,f,g,niter=1000,tol=1e-6,eta=0.9,beta1=0.1,beta2=0.9)
 _, gdgs, _, _ = gradient_descent_adaptive_step(x0,f,g,step_size=0.09,niter=1000,tol=1e-6, metod='golden_section')
+_, gdar, _, _ = gradient_descent_adaptive_step(x0,f,g,step_size=0.09,niter=1000,tol=1e-6, metod='armijo')
 
 
 ax = function_contour(f,[-5,-5],[5,5],0.1,30)
@@ -32,6 +33,7 @@ ax = function_contour(f,[-5,-5],[5,5],0.1,30)
 #plot_sequence(f,ada,ax)
 plot_sequence(f,gdgs,ax, label='Seção Aúrea')
 plot_sequence(f,gda,ax, label='Adpativo normal')
+plot_sequence(f,gdar,ax, label='Regra de Armijo')
 print(f'niter: \n gd1 {len(gd1)} \n gd2 {len(gd2)} \n gda {len(gda)} \n gdm {len(gdm)} \n rms {len(rms)} \n rms {len(ada)}')
 
 plt.legend()

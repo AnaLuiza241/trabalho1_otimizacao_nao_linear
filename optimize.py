@@ -92,7 +92,7 @@ def gradient_descent(x0,f,grad,step_size,niter=500,tol=1e-6,gamma=0.98):
 
     return x, xs, ys,ss
 
-def gradient_descent_adaptive_step(x0,f,grad,step_size,niter=500,tol=1e-6,gamma=0.98, metod='default'):
+def gradient_descent_adaptive_step(x0,f,grad,step_size,niter=500,tol=1e-6,gamma=0.98, metod='default',  alpha=0.5, beta=0.8):
 
     x = x0
     iter = 0
@@ -105,6 +105,8 @@ def gradient_descent_adaptive_step(x0,f,grad,step_size,niter=500,tol=1e-6,gamma=
         
         if metod == 'golden_section':
             s = golden_section(lambda a: f(x + a * d), 0, step_size)
+        elif metod == 'armijo':
+            s = armijo_rule(f, grad, x, d, s, alpha, beta)
         elif metod == 'default':
             while f(x + s*d) > f(x):
                 s = s*gamma
@@ -135,3 +137,8 @@ def golden_section(f, a, b, tol=1e-6):
             a = x1
 
     return (a + b) / 2
+
+def armijo_rule(f, grad, x, d, s, alpha=0.5, beta=0.8):
+    while f(x + s*d) > f(x) + alpha*s*np.dot(grad(x).T, d):
+        s = s * beta
+    return s
