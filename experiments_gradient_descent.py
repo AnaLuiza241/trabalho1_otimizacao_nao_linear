@@ -20,16 +20,19 @@ _, gdm, _ = gradient_descent_momentum(x0,f,g,niter=1000,tol=1e-6,eta=0.04,beta=0
 _, gda, _, _ = gradient_descent_adaptive_step(x0,f,g,step_size=0.09,niter=1000,tol=1e-6)
 _, rms, _ = rmsprop(x0,f,g,niter=1000,tol=1e-6,eta=0.9,gamma=0.9)
 _, ada, _ = adam(x0,f,g,niter=1000,tol=1e-6,eta=0.9,beta1=0.1,beta2=0.9)
+_, gdgs, _, _ = gradient_descent_adaptive_step(x0,f,g,step_size=0.09,niter=1000,tol=1e-6, metod='golden_section')
 
 
 ax = function_contour(f,[-5,-5],[5,5],0.1,30)
 
 #plot_sequence(f,gd1,[-5,-5],[5,5],0.1,30)
-plot_sequence(f,gd2,ax)
-plot_sequence(f,gdm,ax)
-plot_sequence(f,rms,ax)
-plot_sequence(f,ada,ax)
-
+#plot_sequence(f,gd2,ax)
+#plot_sequence(f,gdm,ax)
+#plot_sequence(f,rms,ax)
+#plot_sequence(f,ada,ax)
+plot_sequence(f,gdgs,ax, label='Seção Aúrea')
+plot_sequence(f,gda,ax, label='Adpativo normal')
 print(f'niter: \n gd1 {len(gd1)} \n gd2 {len(gd2)} \n gda {len(gda)} \n gdm {len(gdm)} \n rms {len(rms)} \n rms {len(ada)}')
 
+plt.legend()
 plt.show()

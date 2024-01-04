@@ -20,11 +20,11 @@ def function_contour(fun, lb, up, delta, levels):
 
     return ax
 
-def plot_sequence(fun, seq, ax):
+def plot_sequence(fun, seq, ax, label='Não informado'):
     
     p0 = [p[0] for p in seq]
     p1 = [p[1] for p in seq]
-    ax.plot(p1, p0, '-d')
+    ax.plot(p1, p0, '-d', label=label)
 
 
 def plot_Htransform(reference, H, ax=None, color='black', w1=0.04, s1=0.3, w2=0.04, s2=0.05):

@@ -92,7 +92,7 @@ def gradient_descent(x0,f,grad,step_size,niter=500,tol=1e-6,gamma=0.98):
 
     return x, xs, ys,ss
 
-def gradient_descent_adaptive_step(x0,f,grad,step_size,niter=500,tol=1e-6,gamma=0.98):
+def gradient_descent_adaptive_step(x0,f,grad,step_size,niter=500,tol=1e-6,gamma=0.98, metod='default'):
 
     x = x0
     iter = 0
@@ -102,8 +102,13 @@ def gradient_descent_adaptive_step(x0,f,grad,step_size,niter=500,tol=1e-6,gamma=
     s = step_size
     while (iter < niter) and (np.linalg.norm(grad(x),2) > tol):
         d = -grad(x)
-        while f(x + s*d) > f(x):
-            s = s*gamma
+        
+        if metod == 'golden_section':
+            s = golden_section(lambda a: f(x + a * d), 0, step_size)
+        elif metod == 'default':
+            while f(x + s*d) > f(x):
+                s = s*gamma
+
         x = x + s*d
         ss.append(s)
         xs.append(x)
@@ -115,3 +120,18 @@ def gradient_descent_adaptive_step(x0,f,grad,step_size,niter=500,tol=1e-6,gamma=
 
     return x, xs, ys,ss
 
+
+def golden_section(f, a, b, tol=1e-6):
+    O = (np.sqrt(5) + 1)/2   # Número de ouro
+
+    while (b - a) > tol:
+        d = (b - a) / O
+        x1 = b - d
+        x2 = a + d
+
+        if f(x1) < f(x2):
+            b = x2
+        else:
+            a = x1
+
+    return (a + b) / 2
