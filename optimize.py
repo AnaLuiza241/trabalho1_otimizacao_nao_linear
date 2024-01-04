@@ -1,6 +1,6 @@
 import numpy as np 
 
-def adam(x0,f,grad,niter=500,tol=1e-6,eta=0.9,beta1=0.9,beta2=0.99):
+def adam(x0,f,grad,niter=500,tol=1e-6,eta=0.9,beta1=0.9,beta2=0.99, metod='default'):
 
     epsilon = 1e-8
     x = x0
@@ -19,8 +19,14 @@ def adam(x0,f,grad,niter=500,tol=1e-6,eta=0.9,beta1=0.9,beta2=0.99):
         st = s/(1-beta2**iter)
 
         d = - eta/(np.sqrt(st+epsilon))*vt
-
-        x = x + d
+        if metod == 'defaut':
+            x = x + d
+        elif metod == 'armijo':
+            s = armijo_rule(f, grad, x, d)
+            x = x + s*d
+        elif metod == 'golden_section':
+            s = golden_section(lambda a: f(x + a * d), 0, 1.0)
+            x = x + s*d
         
         xs.append(x)
         ys.append(f(x))
@@ -51,7 +57,7 @@ def rmsprop(x0,f,grad,niter=500,tol=1e-6,eta=0.9,gamma=0.98):
         
     return x, xs, ys
 
-def gradient_descent_momentum(x0,f,grad,niter=500,tol=1e-6,eta=0.9,beta=0.98):
+def gradient_descent_momentum(x0,f,grad,niter=500,tol=1e-6,eta=0.9,beta=0.98, metod='default'):
 
     x = x0
     iter = 0
@@ -62,7 +68,14 @@ def gradient_descent_momentum(x0,f,grad,niter=500,tol=1e-6,eta=0.9,beta=0.98):
     while (iter < niter) and (np.linalg.norm(grad(x),2) > tol):
         g = grad(x)
         v = beta*v + g
-        x = x - eta * v
+        if metod == 'default':
+            s = eta
+        elif metod == 'armijo':
+            s = s = armijo_rule(f, grad, x, v)
+        elif metod == 'golden_section':
+            s = golden_section(lambda a: f(x - a * v), 0, 1.0)
+
+        x = x - s * v
         
         xs.append(x)
         ys.append(f(x))
