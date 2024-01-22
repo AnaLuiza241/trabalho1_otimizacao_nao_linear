@@ -19,10 +19,11 @@ def adam(x0,f,grad,niter=500,tol=1e-6,eta=0.9,beta1=0.9,beta2=0.99, metod='defau
         st = s/(1-beta2**iter)
 
         d = - eta/(np.sqrt(st+epsilon))*vt
+        x = x + d
         if metod == 'defaut':
             x = x + d
         elif metod == 'armijo':
-            s = armijo_rule(f, grad, x, d)
+            s = armijo_rule(f, grad, x, d, s)
             x = x + s*d
         elif metod == 'golden_section':
             s = golden_section(lambda a: f(x + a * d), 0, 1.0)
@@ -68,13 +69,7 @@ def gradient_descent_momentum(x0,f,grad,niter=500,tol=1e-6,eta=0.9,beta=0.98, me
     while (iter < niter) and (np.linalg.norm(grad(x),2) > tol):
         g = grad(x)
         v = beta*v + g
-        if metod == 'default':
-            s = eta
-        elif metod == 'armijo':
-            s = s = armijo_rule(f, grad, x, v)
-        elif metod == 'golden_section':
-            s = golden_section(lambda a: f(x - a * v), 0, 1.0)
-
+        s = eta
         x = x - s * v
         
         xs.append(x)
@@ -128,7 +123,7 @@ def gradient_descent_adaptive_step(x0,f,grad,step_size,niter=500,tol=1e-6,gamma=
         ss.append(s)
         xs.append(x)
         ys.append(f(x))
-        print(f'[{iter}] f: {f(x):.4f} g: {np.linalg.norm(grad(x),2):.4f} d:{d}')
+        #print(f'[{iter}] f: {f(x):.4f} g: {np.linalg.norm(grad(x),2):.4f} d:{d}')
         iter+=1
         s = step_size
         
